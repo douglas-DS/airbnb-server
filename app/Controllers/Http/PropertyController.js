@@ -16,8 +16,7 @@ class PropertyController {
    */
   async index ({ request }) {
     const { latitude, longitude } = request.all();
-    console.log(`[index] req latitude: ${latitude}`);
-    console.log(`[index] req longitude: ${longitude}`);
+    console.log(`${new Date} --- [index] Latitude' ${latitude}' Longitude '${longitude}'`);
 
     const properties = Property.query()
       .with('images')
