@@ -7,6 +7,10 @@ const Database = use('Database');
 
 class Property extends Model {
 
+    // static get computed() {
+    //     return ['latitude', 'longitude'];
+    // }
+
     static scopeNearBy(query, latitude, longitude, distance) {
 
         const haversine = `(6371 * acos(cos(radians(${latitude}))
@@ -28,6 +32,19 @@ class Property extends Model {
     images() {
         return this.hasMany('App/Models/Image');
     }
+
+    getPrice(price) {
+        return parseFloat(price);
+    }
+
+    getLatitude(latitude) {
+        return parseFloat(latitude);
+    }
+    
+    getLongitude(longitude) {
+        return parseFloat(longitude);
+    }
+
 }
 
 module.exports = Property
