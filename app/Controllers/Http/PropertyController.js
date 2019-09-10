@@ -14,12 +14,19 @@ class PropertyController {
    * Show a list of all properties.
    * GET properties
    */
-  async index () {
-    const properties = Property.all();
+  async index ({ request }) {
+    const { latitude, longitude } = request.all();
+    console.log(`[index] req latitude: ${latitude}`);
+    console.log(`[index] req longitude: ${longitude}`);
+
+    const properties = Property.query()
+      .with('images')
+      .nearBy(latitude, longitude, 10)
+      .fetch();
+    
     return properties;
   }
  
-
   /**
    * Create/save a new property.
    * POST properties
@@ -28,7 +35,22 @@ class PropertyController {
    * @param {Request} ctx.request
    * @param {Response} ctx.response
    */
-  async store ({ request, response }) {
+  async store ({ auth, request, response }) {
+    const { username, id } = auth.user;
+
+    console.log(`[store] User: ${username}`)
+
+    const data = request.only([
+      'title',
+      'address',
+      'latitude',
+      'longitude',
+      'price'
+    ]);
+
+    const property = await Property.create({ ...data, user_id: id });
+
+    return property;
   }
 
   /**
@@ -56,6 +78,26 @@ class PropertyController {
    * @param {Response} ctx.response
    */
   async update ({ params, request, response }) {
+    const { id } = params;
+
+    console.log(`[update] Property id: ${id}`);
+
+    const property = await Property.findOrFail(id);
+
+    const data = request.only([
+      'title',
+      'address',
+      'latitude',
+      'longitude',
+      'price'
+    ]);
+
+
+    property.merge(data);
+
+    await property.save();
+
+    return property;
   }
 
   /**
