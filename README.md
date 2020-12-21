@@ -2,5 +2,5 @@
 
 <body>
   <p>Text</p>
-  <script>{document.getElementsByTagName("P")[0].innerHTML = "Haha"}</script>
+  <script type="text/javascript">document.getElementsByTagName("P")[0].innerHTML = "Haha"</script>
 </body>
